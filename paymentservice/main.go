@@ -60,9 +60,9 @@ func main() {
 			CustomerId: order.CustomerId,
 			Amount: order.Amount,
 		}
+		log.Println("Payment has been debited from customer account for Order:", order.OrderId)
 		if err:= createPaymentDebitedCommand(command); err!=nil {
 			log.Println("error occured while executing the PaymentDebited command")
-			return
 		}
 	}, stan.DurableName(durableID),
 		stan.MaxInflight(25),

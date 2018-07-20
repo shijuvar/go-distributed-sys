@@ -54,15 +54,15 @@ VALUES ($1,$2,$3,$4,$5,$6)`
 }
 
 // Approve order
-func (store QueryStore) ApproveOrder(orderId string) error {
+func (store QueryStore) ChangeOrderStatus(orderId string, status string) error {
 	sql := `
 UPDATE orders 
 SET status=$2
-WHERE orderid=$1`
+WHERE id=$1`
 
-	_, err := db.Exec(sql, orderId, "Approve")
+	_, err := db.Exec(sql, orderId, status)
 	if err != nil {
-		return errors.Wrap(err, "error on approving order")
+		return errors.Wrap(err, "error on updating status of order")
 	}
 	return nil
 }
