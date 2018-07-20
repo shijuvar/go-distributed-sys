@@ -1,0 +1,32 @@
+syntax = "proto3";
+package pb;
+
+service EventStore {
+    // Get all events for the given aggregate and event
+    rpc GetEvents(EventFilter) returns (EventResponse) {}
+    // Create a new event to the event store
+    rpc CreateEvent (Event) returns (Response) {}
+}
+
+message Event {
+    string event_id = 1;
+    string event_type = 2;
+    string aggregate_id = 3;
+    string aggregate_type = 4;
+    string event_data = 5;
+    string channel = 6; // an optional field
+}
+
+message Response {
+    bool is_success = 1;
+    string error = 2;
+}
+
+message EventFilter {
+    string event_id = 1;
+    string aggregate_id = 2;
+}
+
+message EventResponse {
+    repeated Event events = 1;
+}
