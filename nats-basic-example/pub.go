@@ -10,7 +10,10 @@ import (
 )
 
 func main() {
-	nc, err := nats.Connect("nats://127.0.0.1:4222")
+	nc, err := nats.Connect("nats://127.0.0.1:4222",
+		nats.Name("nats-demo"), // optional NATS name
+		nats.UserInfo("shijuvar", "gopher"),
+	)
 	if err != nil {
 		log.Fatalf("Error: %s", err)
 	}

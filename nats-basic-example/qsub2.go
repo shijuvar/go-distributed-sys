@@ -1,6 +1,5 @@
 package main
 
-
 import (
 	"log"
 	"runtime"
@@ -15,7 +14,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error: %s", err)
 	}
-	nc.Subscribe("order.created", func(m *nats.Msg) {
+	nc.QueueSubscribe("order.created", "worker-group", func(m *nats.Msg) {
 		log.Printf("[Orer] %s", string(m.Data))
 	})
 	runtime.Goexit()
