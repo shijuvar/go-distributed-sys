@@ -60,5 +60,13 @@ nats-streaming-server \
 --max_msgs 0 \
 --max_bytes 0
 
-	
+## Basic Workflow in the example:
+1. A client app post an Order to an HTTP API.
+2. An HTTP API (**orderservice**) receives the order, then executes a command onto Event Store, which is an immutable log of events, to create an event via its gRPC API (**eventstore**). 
+3. The Event Store API executes the command and then publishes an event "order-created" to NATS Streaming server to let other services know that an event is created.
+4. The Payment service (**paymentservice**) subscribes the event “order-created”, then make the payment, and then create an another event “order-payment-debited” via Event Store API. 
+5. The Query syncing workers (**orderquery-store1 and orderquery-store2 as queue subscribers**) are also subscribing the event “order-created” that synchronise the data models to provide state of the aggregates for query views.
+6. The Event Store API executes a command onto Event Store to create an event “order-payment-debited” and publishes an event to NATS Streaming server to let other services know that the payment has been debited.
+7. The restaurant service (**restaurant service**) finally approves the order.
+8. A Saga coordinator manages the distributed transactions and makes void transactions on failures (to be implemented). 
 
