@@ -8,9 +8,7 @@ import (
 )
 
 func main() {
-	nc, err := nats.Connect("nats://127.0.0.1:4222",
-		nats.UserInfo("shijuvar", "gopher"),
-	)
+	nc, err := nats.Connect("nats://127.0.0.1:4222")
 	if err != nil {
 		log.Fatalf("Error: %s", err)
 	}
