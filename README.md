@@ -67,6 +67,6 @@ nats-streaming-server \
 4. The Payment service (**paymentservice**) subscribes the event “order-created”, then make the payment, and then create an another event “order-payment-debited” via Event Store API. 
 5. The Query syncing workers (**orderquery-store1 and orderquery-store2 as queue subscribers**) are also subscribing the event “order-created” that synchronise the data models to provide state of the aggregates for query views.
 6. The Event Store API executes a command onto Event Store to create an event “order-payment-debited” and publishes an event to NATS Streaming server to let other services know that the payment has been debited.
-7. The restaurant service (**restaurant service**) finally approves the order.
+7. The restaurant service (**restaurantservice**) finally approves the order.
 8. A Saga coordinator manages the distributed transactions and makes void transactions on failures (to be implemented). 
 
