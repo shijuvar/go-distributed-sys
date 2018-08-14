@@ -24,7 +24,7 @@ type server struct{
 	*natsutil.StreamingComponent
 }
 
-// CreateOrder RPC creates a new Event into EventStore
+// CreateEvent RPC creates a new Event into EventStore
 // and publish an event to NATS Streaming
 func (s *server) CreateEvent(ctx context.Context, in *pb.Event) (*pb.Response, error) {
 	// Persist data into EventStore database
@@ -46,7 +46,7 @@ func (s *server) GetEvents(ctx context.Context, in *pb.EventFilter) (*pb.EventRe
 	return &pb.EventResponse{Events: events}, nil
 }
 
-// publishEvent publish an event via NATS Streaming server
+// publishEvent publishes an event via NATS Streaming server
 func publishEvent(component *natsutil.StreamingComponent, event *pb.Event) {
 	sc := component.NATS()
 	channel := event.Channel
@@ -61,10 +61,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	// Register new component within the system.
+	// Register new component within the NATS system.
 	comp := natsutil.NewStreamingComponent(clientID)
 
-	// Connect to NATS and setup discovery subscriptions.
+	// Connect to NATS
 	err = comp.ConnectToNATSStreaming(
 		clusterID,
 		stan.NatsURL(stan.DefaultNatsURL),

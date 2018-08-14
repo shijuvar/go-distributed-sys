@@ -9,7 +9,7 @@ import (
 )
 
 // StreamingComponent is contains reusable logic related to handling
-// of the connection to NATS in the system.
+// of the connection to NATS Streaming in the system.
 type StreamingComponent struct {
 	// cmu is the lock from the component.
 	cmu sync.Mutex
@@ -17,14 +17,14 @@ type StreamingComponent struct {
 	// id is a unique identifier used for this component.
 	id string
 
-	// nc is the connection to NATS.
+	// nc is the connection to NATS Streaming.
 	nc stan.Conn
 
 	// kind is the type of component.
 	kind string
 }
 
-// NewStreamingComponent creates a
+// NewStreamingComponent creates a StreamingComponent
 func NewStreamingComponent(kind string) *StreamingComponent {
 	id := nuid.Next()
 	return &StreamingComponent{
@@ -33,7 +33,7 @@ func NewStreamingComponent(kind string) *StreamingComponent {
 	}
 }
 
-// ConnectToNATSStreaming connects to NATS Streaming and registers the event
+// ConnectToNATSStreaming connects to NATS Streaming
 func (c *StreamingComponent) ConnectToNATSStreaming( clusterID string, options ...stan.Option) error {
 	c.cmu.Lock()
 	defer c.cmu.Unlock()

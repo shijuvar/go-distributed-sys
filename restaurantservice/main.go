@@ -30,7 +30,7 @@ const (
 )
 
 func main() {
-	// Register new component within the system.
+	// Register new NATS component within the system.
 	comp := natsutil.NewStreamingComponent(clientID)
 
 	// Connect to NATS Streaming server

@@ -61,6 +61,7 @@ func createOrder(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
+// createOrderRPC calls the CreateEvent RPC
 func createOrderRPC(order pb.OrderCreateCommand) error {
 
 	conn, err := grpc.Dial(grpcUri, grpc.WithInsecure())

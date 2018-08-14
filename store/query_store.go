@@ -18,7 +18,6 @@ type QueryStore struct{}
 func (store QueryStore) SyncOrderQueryModel(order pb.OrderCreateCommand) error {
 
 	// Run a transaction to sync the query model.
-	// Node: There is an issue with this at this moment
 	err := crdb.ExecuteTx(context.Background(), db, nil, func(tx *sql.Tx) error {
 		return createOrderQueryModel(tx, order)
 	})
