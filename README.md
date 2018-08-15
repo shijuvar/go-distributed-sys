@@ -1,5 +1,6 @@
 # go-distributed-sys
 
+Check out the article [Building Microservices with Event Sourcing/CQRS in Go using gRPC, NATS Streaming and CockroachDB](https://medium.com/@shijuvar/building-microservices-with-event-sourcing-cqrs-in-go-using-grpc-nats-streaming-and-cockroachdb-983f650452aa)
 ## Technologies Used: 
 * Go
 * NATS Streaming
