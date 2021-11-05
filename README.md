@@ -1,5 +1,5 @@
 
-## The updated source code is moved into the repository [go-distsys](https://github.com/shijuvar/go-distsys)
+## The updated source code is moved into the repository [go-distsys](https://github.com/shijuvar/go-distsys). This repository will revamp soon.. 
 
 # go-distributed-sys
 
