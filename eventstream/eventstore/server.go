@@ -1,4 +1,4 @@
-package eventstore
+package main
 
 import (
 	"context"
@@ -16,12 +16,12 @@ var (
 	port = flag.Int("port", 50051, "The server port")
 )
 
-// server is used to implement helloworld.GreeterServer.
+// server is used to implement pb.EventStoreServer interface
 type server struct {
 	pb.UnimplementedEventStoreServer
 }
 
-// Create a new event to the event repository
+// Create a new event to the event store
 func (s *server) CreateEvent(context.Context, *pb.CreateEventRequest) (*pb.CreateEventResponse, error) {
 	return nil, nil
 }
@@ -31,7 +31,7 @@ func (s *server) GetEvents(context.Context, *pb.GetEventsRequest) (*pb.GetEvents
 	return nil, nil
 }
 
-//    Get stream of events for the given event
+// Get stream of events for the given event
 func (s *server) GetEventsStream(*pb.GetEventsRequest, pb.EventStore_GetEventsStreamServer) error {
 	return nil
 }
