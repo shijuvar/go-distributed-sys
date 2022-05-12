@@ -1,6 +1,4 @@
 
-## The updated source code is moved into the repository [go-distsys](https://github.com/shijuvar/go-distsys). This repository will revamp soon.. 
-
 # go-distributed-sys
 
 Check out the article [Building Microservices with Event Sourcing/CQRS in Go using gRPC, NATS Streaming and CockroachDB](https://medium.com/@shijuvar/building-microservices-with-event-sourcing-cqrs-in-go-using-grpc-nats-streaming-and-cockroachdb-983f650452aa)
