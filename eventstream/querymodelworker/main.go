@@ -3,13 +3,15 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"log"
+	"runtime"
+
 	"github.com/nats-io/nats.go"
+
 	"github.com/shijuvar/go-distributed-sys/eventstream/cockroachdb/ordersyncrepository"
 	ordermodel "github.com/shijuvar/go-distributed-sys/eventstream/order"
 	"github.com/shijuvar/go-distributed-sys/eventstream/sqldb"
 	"github.com/shijuvar/go-distributed-sys/pkg/natsutil"
-	"log"
-	"runtime"
 )
 
 const (
@@ -28,7 +30,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Create durable consumer monitor
+	// Create durable consumer
 	jetStreamContext.QueueSubscribe(subscribeSubject, queueGroup, func(msg *nats.Msg) {
 		msg.Ack()
 		var order ordermodel.Order
@@ -38,6 +40,7 @@ func main() {
 			log.Print(err)
 			return
 		}
+		log.Printf("Message subscribed on subject:%s, from:%s,  data:%v", subscribeSubject, clientID, order)
 		orderDB, _ := sqldb.NewOrdersDB()
 		repository, _ := ordersyncrepository.New(orderDB.DB)
 		// Sync query model with event data

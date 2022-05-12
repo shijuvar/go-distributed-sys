@@ -5,22 +5,23 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/shijuvar/go-distributed-sys/eventstream/cockroachdb/ordersyncrepository"
-	"github.com/shijuvar/go-distributed-sys/eventstream/eventstore"
-	"github.com/shijuvar/go-distributed-sys/eventstream/sqldb"
-	"google.golang.org/grpc"
 	"log"
 	"runtime"
 
+	"github.com/google/uuid"
 	"github.com/nats-io/nats.go"
+	"google.golang.org/grpc"
+
+	"github.com/shijuvar/go-distributed-sys/eventstream/cockroachdb/ordersyncrepository"
+	"github.com/shijuvar/go-distributed-sys/eventstream/eventstore"
 	ordermodel "github.com/shijuvar/go-distributed-sys/eventstream/order"
+	"github.com/shijuvar/go-distributed-sys/eventstream/sqldb"
 	"github.com/shijuvar/go-distributed-sys/pkg/natsutil"
 )
 
 const (
 	clientID         = "order-review-worker"
-	subscribeSubject = "ORDERS.created"
+	subscribeSubject = "ORDERS.payment.debited"
 	queueGroup       = "order-review-worker"
 	event            = "ORDERS.approved"
 	aggregate        = "order"
@@ -38,12 +39,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Create durable consumer monitor
+	// Create durable consumer
 	jetStreamContext.QueueSubscribe(subscribeSubject, queueGroup, func(msg *nats.Msg) {
 		msg.Ack()
 		var paymentDebited ordermodel.PaymentDebitedCommand
 		// Unmarshal JSON that represents the PaymentDebited data
 		err := json.Unmarshal(msg.Data, &paymentDebited)
+		log.Printf("Message subscribed on subject:%s, from:%s, data:%v", subscribeSubject, clientID, paymentDebited)
 		if err != nil {
 			log.Print(err)
 			return

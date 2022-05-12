@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"log"
 	"runtime"
 
+	"github.com/google/uuid"
 	"github.com/nats-io/nats.go"
 	"google.golang.org/grpc"
 
@@ -37,7 +37,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Create durable consumer monitor
+	// Create durable consumer
 	jetStreamContext.QueueSubscribe(subscribeSubject, queueGroup, func(msg *nats.Msg) {
 		msg.Ack()
 		var order ordermodel.Order
@@ -47,6 +47,8 @@ func main() {
 			log.Print(err)
 			return
 		}
+		log.Printf("Message subscribed on subject:%s, from:%s, data:%v", subscribeSubject, clientID, order)
+
 		// Create OrderPaymentDebitedCommand from Order
 		command := ordermodel.PaymentDebitedCommand{
 			OrderID:    order.ID,
