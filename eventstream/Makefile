@@ -1,6 +1,6 @@
 # START: compile
 compile:
-	protoc pb/*.proto \
+	protoc eventstore/*.proto \
 		--go_out=. \
 		--go-grpc_out=. \
 		--go_opt=paths=source_relative \
