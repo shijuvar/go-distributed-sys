@@ -67,7 +67,7 @@ cockroach sql --insecure -e 'GRANT ALL ON DATABASE ordersdb TO shijuvar'
 
 cockroach sql --insecure -e 'GRANT ALL ON DATABASE eventstoredb TO shijuvar'
 
-## Run NATS JetStream Server by enabling the js flag
+## Run NATS JetStream Server 
 nats-server -js
 
 
