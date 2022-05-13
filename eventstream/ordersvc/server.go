@@ -80,6 +80,7 @@ func (h orderHandler) createOrder(w http.ResponseWriter, r *http.Request) {
 	order.ID = aggregateID
 	order.Status = "Pending"
 	order.CreatedOn = time.Now()
+	order.Amount = order.GetAmount()
 	err = h.rpc.createOrder(order)
 	if err != nil {
 		log.Print(err)

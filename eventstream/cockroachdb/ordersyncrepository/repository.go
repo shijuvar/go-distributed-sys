@@ -38,9 +38,9 @@ func createOrder(tx *sql.Tx, order order.Order) error {
 
 	// Insert ordersyncrepository into the "orders" table.
 	sql := `
-			INSERT INTO orders (id, customerid, status, createdon, restaurantid)
-			VALUES ($1,$2,$3,$4,$5)`
-	_, err := tx.Exec(sql, order.ID, order.CustomerID, order.Status, order.CreatedOn, order.RestaurantId)
+			INSERT INTO orders (id, customerid, status, createdon, restaurantid, amount)
+			VALUES ($1,$2,$3,$4,$5,$6)`
+	_, err := tx.Exec(sql, order.ID, order.CustomerID, order.Status, order.CreatedOn, order.RestaurantId, order.Amount)
 	if err != nil {
 		return err
 	}

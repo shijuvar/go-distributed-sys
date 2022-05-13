@@ -20,9 +20,9 @@ import (
 )
 
 const (
-	clientID         = "order-review-worker"
-	subscribeSubject = "ORDERS.payment.debited"
-	queueGroup       = "order-review-worker"
+	clientID         = "review-worker"
+	subscribeSubject = "ORDERS.paymentdebited"
+	queueGroup       = "review-worker"
 	event            = "ORDERS.approved"
 	aggregate        = "order"
 	stream           = "ORDERS"
@@ -65,7 +65,6 @@ func main() {
 			log.Println("error occured while executing the OrderApproved command")
 			return
 		}
-
 	}, nats.Durable(clientID), nats.ManualAck())
 	runtime.Goexit()
 }

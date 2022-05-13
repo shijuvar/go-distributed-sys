@@ -21,7 +21,7 @@ const (
 	clientID         = "payment-worker"
 	subscribeSubject = "ORDERS.created"
 	queueGroup       = "payment-worker"
-	event            = "ORDERS.payment.debited"
+	event            = "ORDERS.paymentdebited"
 	aggregate        = "order"
 	stream           = "ORDERS"
 	grpcUri          = "localhost:50051"

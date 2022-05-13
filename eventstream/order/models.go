@@ -20,5 +20,16 @@ type OrderItem struct {
 	ProductCode string  `json:"code,omitempty"`
 	Name        string  `json:"name,omitempty"`
 	UnitPrice   float64 `json:"unit_price,omitempty"`
-	Quantity    int32   `json:"quantity,omitempty"`
+	Quantity    int     `json:"quantity,omitempty"`
+}
+
+/* Domain Services */
+
+// GetAmount returns total amount of the order
+func (order Order) GetAmount() float64 {
+	var amount float64
+	for _, v := range order.OrderItems {
+		amount += v.UnitPrice * float64(v.Quantity)
+	}
+	return amount
 }
