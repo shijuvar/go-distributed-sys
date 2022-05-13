@@ -1,7 +1,8 @@
 
-# go-distributed-sys
+# Guidance for building distributed systems and Microservices in Go
 
-Check out the article [Building Microservices with Event Sourcing/CQRS in Go using gRPC, NATS Streaming and CockroachDB](https://medium.com/@shijuvar/building-microservices-with-event-sourcing-cqrs-in-go-using-grpc-nats-streaming-and-cockroachdb-983f650452aa)
+These demos will be used for [Shiju Varghese's Masterclass on Go and Distributed Systems](https://github.com/shijuvar/shijuvar/blob/master/masterclass.md)
+
 ## Technologies Used: 
 * Go
 * NATS JetStream
@@ -25,7 +26,7 @@ protoc eventstore/*.proto \
 #### Set up CockroachDB  Cluster with three nodes
 cockroach start \
 --insecure \
---store=ordersdb-1 \
+--store=orders-1 \
 --listen-addr=localhost:26257 \
 --http-addr=localhost:8080 \
 --join=localhost:26257,localhost:26258,localhost:26259 \
@@ -33,7 +34,7 @@ cockroach start \
 
 cockroach start \
 --insecure \
---store=ordersdb-2 \
+--store=orders-2 \
 --listen-addr=localhost:26258 \
 --http-addr=localhost:8081 \
 --join=localhost:26257,localhost:26258,localhost:26259 \
@@ -41,7 +42,7 @@ cockroach start \
 
 cockroach start \
 --insecure \
---store=ordersdb-3 \
+--store=orders-3 \
 --listen-addr=localhost:26259 \
 --http-addr=localhost:8082 \
 --join=localhost:26257,localhost:26258,localhost:26259 \
