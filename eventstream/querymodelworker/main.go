@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"log"
-	"runtime"
 
 	"github.com/nats-io/nats.go"
 
@@ -18,6 +17,7 @@ const (
 	clientID         = "query-model-worker"
 	subscribeSubject = "ORDERS.created"
 	queueGroup       = "query-model-worker"
+	batch            = 1
 )
 
 func main() {
@@ -30,8 +30,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Create durable consumer
-	jetStreamContext.QueueSubscribe(subscribeSubject, queueGroup, func(msg *nats.Msg) {
+	pullSubscribeOnOrder(jetStreamContext)
+	//pushSubscribeOnOrder(jetStreamContext)
+	//runtime.Goexit()
+}
+
+func pushSubscribeOnOrder(js nats.JetStreamContext) {
+	// Create durable push consumer
+	js.QueueSubscribe(subscribeSubject, queueGroup, func(msg *nats.Msg) {
 		msg.Ack()
 		var order ordermodel.Order
 		// Unmarshal JSON that represents the Order data
@@ -49,5 +55,31 @@ func main() {
 		}
 
 	}, nats.Durable(clientID), nats.ManualAck())
-	runtime.Goexit()
+}
+
+func pullSubscribeOnOrder(js nats.JetStreamContext) {
+	// Create Pull based consumer with maximum 128 inflight.
+	// PullMaxWaiting defines the max inflight pull requests.
+	sub, _ := js.PullSubscribe(subscribeSubject, clientID, nats.PullMaxWaiting(128))
+	for {
+
+		msgs, _ := sub.Fetch(batch)
+		for _, msg := range msgs {
+			msg.Ack()
+			var order ordermodel.Order
+			// Unmarshal JSON that represents the Order data
+			err := json.Unmarshal(msg.Data, &order)
+			if err != nil {
+				log.Print(err)
+				return
+			}
+			log.Printf("Message subscribed on subject:%s, from:%s,  data:%v", subscribeSubject, clientID, order)
+			orderDB, _ := sqldb.NewOrdersDB()
+			repository, _ := ordersyncrepository.New(orderDB.DB)
+			// Sync query model with event data
+			if err := repository.CreateOrder(context.Background(), order); err != nil {
+				log.Printf("Error while replicating the query model %+v", err)
+			}
+		}
+	}
 }

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"google.golang.org/grpc/status"
 	"log"
 	"net/http"
 	"time"
@@ -13,6 +12,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/status"
 
 	"github.com/shijuvar/go-distributed-sys/eventstream/eventstore"
 	"github.com/shijuvar/go-distributed-sys/eventstream/order"
