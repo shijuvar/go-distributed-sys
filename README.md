@@ -1,7 +1,7 @@
 
-# go-distributed-sys
+# Guidance for building distributed systems and Microservices in Go
 
-Check out the article [Building Microservices with Event Sourcing/CQRS in Go using gRPC, NATS Streaming and CockroachDB](https://medium.com/@shijuvar/building-microservices-with-event-sourcing-cqrs-in-go-using-grpc-nats-streaming-and-cockroachdb-983f650452aa)
+
 ## Technologies Used: 
 * Go
 * NATS JetStream
@@ -10,65 +10,73 @@ Check out the article [Building Microservices with Event Sourcing/CQRS in Go usi
 
 
 ## Compile Proto files
-Run the command below from the nats-streaming directory:
+Run the command below from the eventstream directory:
 
-protoc -I pb/ pb/*.proto --go_out=plugins=grpc:pb
+protoc eventstore/*.proto \
+		--go_out=. \
+		--go-grpc_out=. \
+		--go_opt=paths=source_relative \
+		--go-grpc_opt=paths=source_relative \
+		--proto_path=.
 
-## Set up CockroachDB
+
+## Set up CockroachDB 
+
+#### Set up CockroachDB  Cluster with three nodes
+cockroach start \
+--insecure \
+--store=orders-1 \
+--listen-addr=localhost:26257 \
+--http-addr=localhost:8080 \
+--join=localhost:26257,localhost:26258,localhost:26259 \
+--background
+
+cockroach start \
+--insecure \
+--store=orders-2 \
+--listen-addr=localhost:26258 \
+--http-addr=localhost:8081 \
+--join=localhost:26257,localhost:26258,localhost:26259 \
+--background
+
+cockroach start \
+--insecure \
+--store=orders-3 \
+--listen-addr=localhost:26259 \
+--http-addr=localhost:8082 \
+--join=localhost:26257,localhost:26258,localhost:26259 \
+--background
+
+#### cockroach init command to perform a one-time initialization of the cluster
+cockroach init --insecure --host=localhost:26257
+
+#### Start a SQL Shell for CockroachDB:
+cockroach sql --insecure --host=localhost:26257
 
 #### Create user
 cockroach user set shijuvar --insecure
 
-#### Create Database
+#### Create Databases
+cockroach sql --insecure -e 'CREATE DATABASE eventstoredb'
+
 cockroach sql --insecure -e 'CREATE DATABASE ordersdb'
 
 #### Grant privileges to the shijuvar user
 cockroach sql --insecure -e 'GRANT ALL ON DATABASE ordersdb TO shijuvar'
 
-### Start CockroachDB Cluster 
+cockroach sql --insecure -e 'GRANT ALL ON DATABASE eventstoredb TO shijuvar'
 
-#### Start node 1:
-cockroach start --insecure \
---store=ordersdb-1 \
---host=localhost \
---background
+## Run NATS JetStream Server 
+nats-server -js
 
-#### Start node 2:
-cockroach start --insecure \
---store=ordersdb-2 \
---host=localhost \
---port=26258 \
---http-port=8081 \
---join=localhost:26257 \
---background
-
-#### Start node 3:
-cockroach start --insecure \
---store=ordersdb-3 \
---host=localhost \
---port=26259 \
---http-port=8082 \
---join=localhost:26257 \
---background
-
-#### Start a SQL Shell for CockroachDB:
-cockroach sql \
---url="postgresql://shijuvar@localhost:26257/ordersdb?sslmode=disable";
-
-## Run NATS Streaming Server
-nats-streaming-server \
---store file \
---dir ./data \
---max_msgs 0 \
---max_bytes 0
 
 ## Basic Workflow in the example:
-1. A client app post an Order to an HTTP API.
-2. An HTTP API (**orderservice**) receives the order, then executes a command onto Event Store, which is an immutable log of events, to create an event via its gRPC API (**eventstore**). 
-3. The Event Store API executes the command and then publishes an event "order-created" to NATS Streaming server to let other services know that an event is created.
-4. The Payment service (**paymentservice**) subscribes the event “order-created”, then make the payment, and then create an another event “order-payment-debited” via Event Store API. 
-5. The Query syncing workers (**orderquery-store1 and orderquery-store2 as queue subscribers**) are also subscribing the event “order-created” that synchronise the data models to provide state of the aggregates for query views.
-6. The Event Store API executes a command onto Event Store to create an event “order-payment-debited” and publishes an event to NATS Streaming server to let other services know that the payment has been debited.
-7. The restaurant service (**restaurantservice**) finally approves the order.
-8. A Saga coordinator manages the distributed transactions and makes void transactions on failures (to be implemented). 
 
+1. A client app post an Order to an HTTP API (ordersvc)
+2. An HTTP API (ordersvc) receives the order, then executes a command onto Event Store, which is an immutable log of events of domain events, to create an event via its gRPC API (eventstoresvc).
+3. The Event Store API executes the command and then publishes an event "ORDERS.created" to NATS JetStream server to let other services know that a domain event is created.
+4. The Payment worker (paymentworker) subscribes the event "ORDERS.created", then make the payment, and then create an another event "ORDERS.paymentdebited" via Event Store API.
+5. The Event Store API executes a command onto Event Store to create an event "ORDERS.paymentdebited" and publishes an event to NATS JetStream server to let other services know that the payment has been debited.
+6. The Query synchronising worker (querymodelworker) subscribes the event "ORDERS.created" that synchronise the query data model to provide state of the aggregates for query views.
+7. The review worker (reviewworker) subscribes the event "ORDERS.paymentdebited" and finally approves the order.
+8. A Saga coordinator manages the distributed transactions and makes void transactions on failures (to be implemented)
