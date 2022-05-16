@@ -72,12 +72,12 @@ nats-server -js
 
 
 ## Basic Workflow in the example:
-1. A client app post an Order to an HTTP API (**ordersvc**)
-2. An HTTP API (**ordersvc**) receives the order, then executes a command onto Event Store, which is an immutable log of events, to create an event via its gRPC API (**eventstoresvc**). 
-3. The Event Store API executes the command and then publishes an event "ORDERS.created" to NATS JetStream server to let other services know that an event is created.
-4. The Payment worker (**paymentworker**) subscribes the event “ORDERS.created”, then make the payment, and then create an another event “ORDERS.paymentdebited” via Event Store API. 
-5. The Query syncing worker (**querymodelworker**) subscribes the event “ORDERS.created” that synchronise the data models to provide state of the aggregates for query views.
-6. The Event Store API executes a command onto Event Store to create an event “ORDERS.paymentdebited” and publishes an event to NATS JetStream server to let other services know that the payment has been debited.
-7. The review worker (**reviewworker**) finally approves the order.
-8. A Saga coordinator manages the distributed transactions and makes void transactions on failures (to be implemented). 
 
+1. A client app post an Order to an HTTP API (ordersvc)
+2. An HTTP API (ordersvc) receives the order, then executes a command onto Event Store, which is an immutable log of events of domain events, to create an event via its gRPC API (eventstoresvc).
+3. The Event Store API executes the command and then publishes an event "ORDERS.created" to NATS JetStream server to let other services know that a domain event is created.
+4. The Payment worker (paymentworker) subscribes the event "ORDERS.created", then make the payment, and then create an another event "ORDERS.paymentdebited" via Event Store API.
+5. The Event Store API executes a command onto Event Store to create an event "ORDERS.paymentdebited" and publishes an event to NATS JetStream server to let other services know that the payment has been debited.
+6. The Query synchronising worker (querymodelworker) subscribes the event "ORDERS.created" that synchronise the query data model to provide state of the aggregates for query views.
+7. The review worker (reviewworker) subscribes the event "ORDERS.paymentdebited" and finally approves the order.
+8. A Saga coordinator manages the distributed transactions and makes void transactions on failures (to be implemented)
