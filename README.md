@@ -1,7 +1,6 @@
 
 # Guidance for building distributed systems and Microservices in Go
 
-These demos will be used for [Shiju Varghese's Masterclass on Go and Distributed Systems](https://github.com/shijuvar/shijuvar/blob/master/masterclass.md)
 
 ## Technologies Used: 
 * Go
