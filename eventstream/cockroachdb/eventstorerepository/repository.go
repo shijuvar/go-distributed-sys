@@ -20,7 +20,7 @@ func New(db *sql.DB) (eventstore.Repository, error) {
 }
 
 func (repo repository) CreateEvent(event *eventstore.Event) error {
-	// Insert two rows into the "accounts" table.
+	// Insert two rows into the "events" table.
 	// sql := fmt.Sprintf("INSERT INTO events (id, eventtype, aggregateid, aggregatetype, eventdata, channel)
 	// VALUES ('%s','%s','%s','%s','%s','%s')", event.EventId, event.EventType, event.AggregateId, event.AggregateType, event.EventData, event.Channel)
 	sql := `
@@ -34,6 +34,7 @@ VALUES ($1, $2, $3, $4, $5, $6)`
 	return nil
 }
 
+// To Do: GetEvents
 func (repo repository) GetEvents(filter *eventstore.GetEventsRequest) ([]*eventstore.Event, error) {
 	var events []*eventstore.Event
 	return events, nil

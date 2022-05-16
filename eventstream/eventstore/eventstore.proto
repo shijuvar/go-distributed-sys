@@ -18,7 +18,7 @@ message Event {
   string aggregate_id = 3;
   string aggregate_type = 4;
   string event_data = 5;
-  string stream = 6; // an optional field
+  string stream = 6; 
 }
 message CreateEventRequest {
     Event event =1;

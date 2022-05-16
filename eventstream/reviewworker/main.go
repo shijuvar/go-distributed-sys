@@ -61,7 +61,7 @@ func main() {
 			return
 		}
 		// Publish event to Event Store
-		if err := createOrderApprovedCommand(command); err != nil {
+		if err := executeOrderApprovedCommand(command); err != nil {
 			log.Println("error occured while executing the OrderApproved command")
 			return
 		}
@@ -69,9 +69,9 @@ func main() {
 	runtime.Goexit()
 }
 
-// createOrderApprovedCommand calls the event store RPC to create an event
+// executeOrderApprovedCommand calls the event store RPC to create an event
 // OrderApproved command is created on Event Store
-func createOrderApprovedCommand(command ordermodel.ChangeOrderStatusCommand) error {
+func executeOrderApprovedCommand(command ordermodel.ChangeOrderStatusCommand) error {
 
 	conn, err := grpc.Dial(grpcUri, grpc.WithInsecure())
 	if err != nil {

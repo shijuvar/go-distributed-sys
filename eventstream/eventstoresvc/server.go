@@ -22,8 +22,9 @@ var (
 	port = flag.Int("port", 50051, "The server port")
 )
 
-// publishEvent publishes an event via NATS Streaming server
+// publishEvent publishes an event via NATS JetStream server
 func publishEvent(component *natsutil.NATSComponent, event *eventstore.Event) {
+	// Creates JetStreamContext to publish messages into JetStream Stream
 	jetStreamContext, _ := component.JetStreamContext()
 	subject := event.EventType
 	eventMsg := []byte(event.EventData)
@@ -39,7 +40,7 @@ type server struct {
 	nats       *natsutil.NATSComponent
 }
 
-// CreateEvent creates a new event to the event store
+// CreateEvent creates a new event into the event store
 func (s *server) CreateEvent(ctx context.Context, eventRequest *eventstore.CreateEventRequest) (*eventstore.CreateEventResponse, error) {
 	err := s.repository.CreateEvent(eventRequest.Event)
 	if err != nil {

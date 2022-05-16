@@ -15,9 +15,12 @@ const (
 )
 
 func main() {
+	// Creates Stream in JetStream server
 	createJStream(orderStream, orderStreamSubjects)
-	//createEventStoreDB()
-	//createOrdersDB()
+	// Creates Event Store schema
+	createEventStoreDB()
+	// Creates Orders schema
+	createOrdersDB()
 }
 
 // createStream creates a stream by using JetStreamContext

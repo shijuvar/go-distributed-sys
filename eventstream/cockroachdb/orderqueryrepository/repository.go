@@ -19,7 +19,7 @@ func New(db *sql.DB) (order.QueryRepository, error) {
 	}, nil
 }
 
-// GetOrderByID query the ordersyncrepository by given id
+// GetOrderByID query the Orders by given id
 func (repo *repository) GetOrderByID(ctx context.Context, id string) (order.Order, error) {
 	var orderRow = order.Order{}
 	if err := repo.db.QueryRowContext(ctx,

@@ -21,7 +21,7 @@ func New(db *sql.DB) (order.Repository, error) {
 	}, nil
 }
 
-// CreateOrder inserts a new ordersyncrepository and its ordersyncrepository items into db
+// CreateOrder persist Order data into the query model
 func (repo *repository) CreateOrder(ctx context.Context, order order.Order) error {
 
 	// Run a transaction to sync the query model.
@@ -36,7 +36,7 @@ func (repo *repository) CreateOrder(ctx context.Context, order order.Order) erro
 
 func createOrder(tx *sql.Tx, order order.Order) error {
 
-	// Insert ordersyncrepository into the "orders" table.
+	// Insert into the "orders" table.
 	sql := `
 			INSERT INTO orders (id, customerid, status, createdon, restaurantid, amount)
 			VALUES ($1,$2,$3,$4,$5,$6)`
@@ -44,7 +44,7 @@ func createOrder(tx *sql.Tx, order order.Order) error {
 	if err != nil {
 		return err
 	}
-	// Insert ordersyncrepository items into the "orderitems" table.
+	// Insert items into the "orderitems" table.
 	// Because it's store for read model, we can insert denormalized data
 	for _, v := range order.OrderItems {
 		sql = `
@@ -71,21 +71,6 @@ WHERE id=$1`
 		return err
 	}
 	return nil
-}
-
-// GetOrderByID query the ordersyncrepository by given id
-func (repo *repository) GetOrderByID(ctx context.Context, id string) (order.Order, error) {
-	var orderRow = order.Order{}
-	if err := repo.db.QueryRowContext(ctx,
-		"SELECT id, customerid, status, createdon, restaurantid FROM orders WHERE id = $1",
-		id).
-		Scan(
-			&orderRow.ID, &orderRow.CustomerID, &orderRow.Status, &orderRow.CreatedOn, &orderRow.RestaurantId,
-		); err != nil {
-		return orderRow, err
-	}
-	// ToDo: Query ordersyncrepository items from orderitems table
-	return orderRow, nil
 }
 
 // Close implements DB.Close

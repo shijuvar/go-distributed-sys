@@ -33,11 +33,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	// Creates JetStreamContext for create consumer
 	jetStreamContext, err := natsComponent.JetStreamContext()
 	if err != nil {
 		log.Fatal(err)
 	}
-	// Create durable consumer
+	// Create push based consumer as durable
 	jetStreamContext.QueueSubscribe(subscribeSubject, queueGroup, func(msg *nats.Msg) {
 		msg.Ack()
 		var order ordermodel.Order
@@ -47,7 +48,8 @@ func main() {
 			log.Print(err)
 			return
 		}
-		log.Printf("Message subscribed on subject:%s, from:%s, data:%v", subscribeSubject, clientID, order)
+		log.Printf("Message subscribed on subject:%s, from:%s, data:%v",
+			subscribeSubject, clientID, order)
 
 		// Create OrderPaymentDebitedCommand from Order
 		command := ordermodel.PaymentDebitedCommand{
@@ -55,7 +57,8 @@ func main() {
 			CustomerID: order.CustomerID,
 			Amount:     order.Amount,
 		}
-		if err := createPaymentDebitedCommand(command); err != nil {
+		// Create ORDERS.paymentdebited event
+		if err := executePaymentDebitedCommand(command); err != nil {
 			log.Println("error occured while executing the PaymentDebited command")
 		}
 
@@ -63,7 +66,7 @@ func main() {
 	runtime.Goexit()
 }
 
-func createPaymentDebitedCommand(command ordermodel.PaymentDebitedCommand) error {
+func executePaymentDebitedCommand(command ordermodel.PaymentDebitedCommand) error {
 
 	conn, err := grpc.Dial(grpcUri, grpc.WithInsecure())
 	if err != nil {

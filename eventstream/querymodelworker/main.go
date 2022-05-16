@@ -17,7 +17,7 @@ const (
 	clientID         = "query-model-worker"
 	subscribeSubject = "ORDERS.created"
 	queueGroup       = "query-model-worker"
-	batch            = 1
+	batch            = 1 // just for the same of demo. Use bigger numbers
 )
 
 func main() {
@@ -31,8 +31,6 @@ func main() {
 		log.Fatal(err)
 	}
 	pullSubscribeOnOrder(jetStreamContext)
-	//pushSubscribeOnOrder(jetStreamContext)
-	//runtime.Goexit()
 }
 
 func pushSubscribeOnOrder(js nats.JetStreamContext) {
