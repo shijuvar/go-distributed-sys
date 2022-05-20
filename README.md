@@ -70,7 +70,7 @@ cockroach sql --insecure -e 'GRANT ALL ON DATABASE eventstoredb TO shijuvar'
 nats-server -js
 
 
-## Basic Workflow in the example:
+## Basic Workflow in the example (eventstream directory):
 
 1. A client app post an Order to an HTTP API (ordersvc)
 2. An HTTP API (ordersvc) receives the order, then executes a command onto Event Store, which is an immutable log of events of domain events, to create an event via its gRPC API (eventstoresvc).
