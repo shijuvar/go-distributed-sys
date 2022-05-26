@@ -6,6 +6,7 @@
 * Go
 * NATS JetStream
 * gRPC
+* Go kit
 * CockroachDB
 
 
