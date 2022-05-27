@@ -9,4 +9,6 @@ type Repository interface {
 
 type QueryRepository interface {
 	GetOrderByID(context.Context, string) (Order, error)
+	GetOrdersByCustomer(context.Context, string) ([]Order, error)
+	GetOrderItems(context.Context, string) ([]OrderItem, error)
 }

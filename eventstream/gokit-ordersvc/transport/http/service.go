@@ -17,7 +17,6 @@ import (
 
 var (
 	// ErrBadRouting is returned when an expected path variable is missing.
-	// It always indicates programmer error.
 	ErrBadRouting = errors.New("inconsistent mapping between route and handler (programmer error)")
 )
 

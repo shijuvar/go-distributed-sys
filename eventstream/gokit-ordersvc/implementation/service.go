@@ -64,17 +64,20 @@ func (gc grpcClient) createOrder(order order.Order) error {
 }
 
 type service struct {
-	rpc rpcClient
+	rpc        rpcClient
+	repository order.QueryRepository
 }
 
-func NewServiceWithRPC(rpc rpcClient) ordersvc.Service {
+func NewServiceWithRPC(rpc rpcClient, repository order.QueryRepository) ordersvc.Service {
 	return &service{
-		rpc: rpc,
+		rpc:        rpc,
+		repository: repository,
 	}
 }
-func NewService() ordersvc.Service {
+func NewService(repository order.QueryRepository) ordersvc.Service {
 	return &service{
-		rpc: grpcClient{},
+		rpc:        grpcClient{},
+		repository: repository,
 	}
 }
 
@@ -93,5 +96,9 @@ func (s *service) CreateOrder(ctx context.Context, order order.Order) (string, e
 }
 
 func (s *service) GetOrderByID(ctx context.Context, id string) (order.Order, error) {
-	return order.Order{}, nil
+	o, err := s.repository.GetOrderByID(ctx, id)
+	if err != nil {
+		return order.Order{}, err
+	}
+	return o, nil
 }

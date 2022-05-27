@@ -1,6 +1,10 @@
 package eventstore
 
+import (
+	"context"
+)
+
 type Repository interface {
-	CreateEvent(event *Event) error
-	GetEvents(filter *GetEventsRequest) ([]*Event, error)
+	CreateEvent(ctx context.Context, event *Event) error
+	GetEvents(ctx context.Context, filter *GetEventsRequest) ([]*Event, error)
 }

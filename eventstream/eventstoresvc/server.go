@@ -42,7 +42,7 @@ type server struct {
 
 // CreateEvent creates a new event into the event store
 func (s *server) CreateEvent(ctx context.Context, eventRequest *eventstore.CreateEventRequest) (*eventstore.CreateEventResponse, error) {
-	err := s.repository.CreateEvent(eventRequest.Event)
+	err := s.repository.CreateEvent(ctx, eventRequest.Event)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "internal error")
 	}
@@ -52,8 +52,12 @@ func (s *server) CreateEvent(ctx context.Context, eventRequest *eventstore.Creat
 }
 
 // GetEvents gets all events for the given aggregate and event
-func (s *server) GetEvents(context.Context, *eventstore.GetEventsRequest) (*eventstore.GetEventsResponse, error) {
-	return nil, nil
+func (s *server) GetEvents(ctx context.Context, filter *eventstore.GetEventsRequest) (*eventstore.GetEventsResponse, error) {
+	events, err := s.repository.GetEvents(ctx, filter)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &eventstore.GetEventsResponse{Events: events}, nil
 }
 
 // GetEventsStream get stream of events for the given event

@@ -13,18 +13,19 @@ import (
 	kitoc "github.com/go-kit/kit/tracing/opencensus"
 	kithttp "github.com/go-kit/kit/transport/http"
 
+	"github.com/shijuvar/go-distributed-sys/eventstream/cockroachdb/orderqueryrepository"
 	ordersvc "github.com/shijuvar/go-distributed-sys/eventstream/gokit-ordersvc"
 	"github.com/shijuvar/go-distributed-sys/eventstream/gokit-ordersvc/implementation"
 	"github.com/shijuvar/go-distributed-sys/eventstream/gokit-ordersvc/middleware"
-
 	"github.com/shijuvar/go-distributed-sys/eventstream/gokit-ordersvc/transport"
 	httptransport "github.com/shijuvar/go-distributed-sys/eventstream/gokit-ordersvc/transport/http"
+	"github.com/shijuvar/go-distributed-sys/eventstream/sqldb"
 	"github.com/shijuvar/go-distributed-sys/pkg/telemetry"
 )
 
 func main() {
 	var (
-		httpAddr = flag.String("http.addr", ":8080", "HTTP listen address")
+		httpAddr = flag.String("http.addr", ":3000", "HTTP listen address")
 	)
 	flag.Parse()
 	// initialize our OpenCensus configuration and defer a clean-up
@@ -48,7 +49,9 @@ func main() {
 	// Create Order Service
 	var s ordersvc.Service
 	{
-		s = implementation.NewService()
+		orderDB, _ := sqldb.NewOrdersDB()
+		repository, _ := orderqueryrepository.New(orderDB.DB)
+		s = implementation.NewService(repository)
 		// Add service middlewares
 		s = middleware.LoggingMiddleware(logger)(s)
 
