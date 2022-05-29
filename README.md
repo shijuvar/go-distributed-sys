@@ -16,17 +16,21 @@
 ## Compile Proto files
 Run the command below from the eventstream directory:
 
+```
 protoc eventstore/*.proto \
 		--go_out=. \
 		--go-grpc_out=. \
 		--go_opt=paths=source_relative \
 		--go-grpc_opt=paths=source_relative \
 		--proto_path=.
+```		
 
 
 ## Set up CockroachDB 
 
 #### Set up CockroachDB  Cluster with three nodes
+
+```
 cockroach start \
 --insecure \
 --store=orders-1 \
@@ -34,7 +38,9 @@ cockroach start \
 --http-addr=localhost:8080 \
 --join=localhost:26257,localhost:26258,localhost:26259 \
 --background
+```
 
+```
 cockroach start \
 --insecure \
 --store=orders-2 \
@@ -42,7 +48,8 @@ cockroach start \
 --http-addr=localhost:8081 \
 --join=localhost:26257,localhost:26258,localhost:26259 \
 --background
-
+```
+```
 cockroach start \
 --insecure \
 --store=orders-3 \
@@ -50,28 +57,67 @@ cockroach start \
 --http-addr=localhost:8082 \
 --join=localhost:26257,localhost:26258,localhost:26259 \
 --background
+```
 
 #### cockroach init command to perform a one-time initialization of the cluster
+```
 cockroach init --insecure --host=localhost:26257
+```
 
 #### Start a SQL Shell for CockroachDB:
+```
 cockroach sql --insecure --host=localhost:26257
+```
 
 #### Create user
+```
 cockroach user set shijuvar --insecure
+```
 
 #### Create Databases
+```
 cockroach sql --insecure -e 'CREATE DATABASE eventstoredb'
+```
 
+```
 cockroach sql --insecure -e 'CREATE DATABASE ordersdb'
+```
 
 #### Grant privileges to the shijuvar user
+```
 cockroach sql --insecure -e 'GRANT ALL ON DATABASE ordersdb TO shijuvar'
-
+```
+```
 cockroach sql --insecure -e 'GRANT ALL ON DATABASE eventstoredb TO shijuvar'
+```
 
 ## Run NATS JetStream Server 
+
+```
 nats-server -js
+```
+
+## Run JetStream with config file
+
+```
+nats-server -c js.conf
+```
+
+// js.conf file
+```
+jetstream {
+    // jetstream data will be in /data/jetstream-server/jetstream
+    store_dir: "/data/jetstream-server"
+
+    // 1GB
+    max_memory_store: 1073741824
+
+    // 10GB
+    max_file_store: 10737418240
+}
+
+http_port: 8222
+```
 
 ## Prerequisites for running the eventstream demo
 
