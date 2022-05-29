@@ -8,8 +8,9 @@
 * Go
 * NATS JetStream
 * gRPC
-* Go kit
 * CockroachDB
+* Go kit
+* Zipkin (for distributed tracing)
 
 
 ## Compile Proto files
