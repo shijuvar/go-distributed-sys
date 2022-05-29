@@ -72,6 +72,12 @@ cockroach sql --insecure -e 'GRANT ALL ON DATABASE eventstoredb TO shijuvar'
 ## Run NATS JetStream Server 
 nats-server -js
 
+## Prerequisites for running the eventstream demo
+
+* Run the NATS JetStream Server
+* Run CockroachDB
+* Run bootstrapper app (eventstream/bootstrapper) as a one time activity for creating stream in JetStream and create two databases in CockroachDB
+* In order to use distributed tracing with gokit-ordersvc (order service with Go kit), run Zipkin distributed tracing system  
 
 ## Basic Workflow in the example (eventstream directory):
 
