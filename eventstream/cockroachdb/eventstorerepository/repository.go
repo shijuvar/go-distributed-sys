@@ -22,13 +22,15 @@ func New(db *sql.DB) (eventstore.Repository, error) {
 
 func (repo repository) CreateEvent(ctx context.Context, event *eventstore.Event) error {
 	// Insert two rows into the "events" table.
-	// sql := fmt.Sprintf("INSERT INTO events (id, eventtype, aggregateid, aggregatetype, eventdata, channel)
-	// VALUES ('%s','%s','%s','%s','%s','%s')", event.EventId, event.EventType, event.AggregateId, event.AggregateType, event.EventData, event.Channel)
-	sql := `
-INSERT INTO events (id, eventtype, aggregateid, aggregatetype, eventdata, stream) 
-VALUES ($1, $2, $3, $4, $5, $6)`
-
-	_, err := repo.db.ExecContext(ctx, sql, event.EventId, event.EventType, event.AggregateId, event.AggregateType, event.EventData, event.Stream)
+	var err error
+	var sql string
+	if event.EventData != "" {
+		sql = `INSERT INTO events (id, eventtype, aggregateid, aggregatetype, eventdata, stream) VALUES ($1, $2, $3, $4, $5, $6)`
+		_, err = repo.db.ExecContext(ctx, sql, event.EventId, event.EventType, event.AggregateId, event.AggregateType, event.EventData, event.Stream)
+	} else {
+		sql = `INSERT INTO events (id, eventtype, aggregateid, aggregatetype, eventdata, stream) VALUES ($1, $2, $3, $4, NULL, $5)`
+		_, err = repo.db.ExecContext(ctx, sql, event.EventId, event.EventType, event.AggregateId, event.AggregateType, event.Stream)
+	}
 	if err != nil {
 		return fmt.Errorf("error on insert into events: %w", err)
 	}

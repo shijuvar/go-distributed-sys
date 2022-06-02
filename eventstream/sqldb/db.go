@@ -23,7 +23,7 @@ func NewEventStoreDB() (*EventStoreDB, error) {
 func (eventstore *EventStoreDB) CreateEventStoreDBSchema() error {
 	// Create the "events" table.
 	if _, err := eventstore.DB.Exec(
-		"CREATE TABLE IF NOT EXISTS events (id string PRIMARY KEY, eventtype string, aggregateid string, aggregatetype string, eventdata string, stream string)"); err != nil {
+		"CREATE TABLE IF NOT EXISTS events (id string PRIMARY KEY, eventtype STRING, aggregateid STRING, aggregatetype STRING, eventdata JSONB, stream STRING)"); err != nil {
 		return err
 	}
 	return nil
@@ -50,13 +50,13 @@ func NewOrdersDB() (*OrdersDB, error) {
 func (orders *OrdersDB) CreateOrdersDBSchema() error {
 	// Create the "orders" table.
 	if _, err := orders.DB.Exec(
-		"CREATE TABLE IF NOT EXISTS orders (id string PRIMARY KEY, customerid string, status string, createdon date, restaurantid string, amount float)"); err != nil {
+		"CREATE TABLE IF NOT EXISTS orders (id STRING PRIMARY KEY, customerid STRING, status STRING, createdon DATE, restaurantid STRING, amount FLOAT)"); err != nil {
 		return err
 	}
 
 	// Create the "orderitems" table.
 	if _, err := orders.DB.Exec(
-		"CREATE TABLE IF NOT EXISTS orderitems (id serial PRIMARY KEY, orderid string, customerid string, code string, name string, unitprice float, quantity int)"); err != nil {
+		"CREATE TABLE IF NOT EXISTS orderitems (id serial PRIMARY KEY, orderid STRING, customerid STRING, code STRING, name STRING, unitprice FLOAT, quantity INT )"); err != nil {
 		return err
 	}
 	return nil
