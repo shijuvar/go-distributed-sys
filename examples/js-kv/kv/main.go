@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/nats-io/nats.go"
 	"os"
+
+	"github.com/nats-io/nats.go"
 )
 
 func main() {
@@ -17,14 +18,15 @@ func main() {
 
 	js, _ := nc.JetStream()
 	var kv nats.KeyValue
-	if stream, _ := js.StreamInfo("KV_sdkv"); stream == nil {
-		fmt.Println("nill")
+	// Creates a Key/Value store with a bucket named discovery if it doesn't exist.
+	// Otherwise, it creates a Key/Value store by providing the existing bucket name.
+	if stream, _ := js.StreamInfo("KV_discovery"); stream == nil {
 		// A key-value (KV) bucket is created by specifying a bucket name.
 		kv, _ = js.CreateKeyValue(&nats.KeyValueConfig{
-			Bucket: "sdkv",
+			Bucket: "discovery",
 		})
 	} else {
-		kv, _ = js.KeyValue("sdkv")
+		kv, _ = js.KeyValue("discovery")
 	}
 	// `KeyValue` interface provides the
 	// standard `Put` and `Get` methods, with a revision number of the entry.
@@ -37,7 +39,7 @@ func main() {
 	fmt.Printf("%s @ %d -> %q\n", entry.Key(), entry.Revision(), string(entry.Value()))
 
 	_, err := kv.Update("services.orders", []byte("https://localhost:8080/v1/orders"), 1)
-	fmt.Printf("expected error: %s\n", err)
+	fmt.Printf("expected error because of wrong revision: %s\n", err)
 
 	kv.Update("services.orders", []byte("https://localhost:8080/v2/orders"), 2)
 	entry, _ = kv.Get("services.orders")
@@ -55,6 +57,7 @@ func main() {
 	if err == nil {
 		fmt.Printf("%s @ %d -> %q\n", entry.Key(), entry.Revision(), string(entry.Value()))
 	}
-	//if err := js.DeleteKeyValue("sdkv"); err != nil {
+	//if err := js.DeleteKeyValue("discovery"); err != nil {
 	//	fmt.Println(err)
+	//}
 }
