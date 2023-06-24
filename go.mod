@@ -1,6 +1,6 @@
 module github.com/shijuvar/go-distributed-sys
 
-go 1.18
+go 1.20
 
 require (
 	contrib.go.opencensus.io/exporter/zipkin v0.1.2
