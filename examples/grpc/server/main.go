@@ -132,7 +132,6 @@ func main() {
 	//	grpc.Creds(tlsCredentials),
 	//	withServerInterceptor(),
 	//)
-
 	s := grpc.NewServer(withServerInterceptor())
 	// Register v1 server
 	pb.RegisterCustomerServer(s, &server{})
