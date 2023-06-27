@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
+	"google.golang.org/grpc/status"
 	"io"
 	"io/ioutil"
 	"os"
@@ -26,6 +27,11 @@ const (
 func createCustomer(client pb.CustomerClient, customer *pb.CustomerRequest) {
 	resp, err := client.CreateCustomer(getContextWithAuth(), customer)
 	if err != nil {
+		if st, ok := status.FromError(err); ok {
+			log.Errorln(st)
+		}
+		log.Fatalf("Could not create Customer: %v", err)
+
 		log.Fatalf("Could not create Customer: %v", err)
 	}
 	if resp.Success {
