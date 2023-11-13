@@ -1,0 +1,39 @@
+syntax = "proto3";
+option go_package = "github.com/shijuvar/go-distributed-sys/examples/grpcv1/customer";
+option java_outer_classname = "CustomerProto";
+
+package customer;
+
+// The Customer service definition.
+service Customer {
+    // Get all Customers with filter - A server-to-client streaming RPC.
+    rpc GetCustomers  (CustomerFilter) returns ( stream CustomerRequest) {}
+    // Create a new Customer - A simple RPC
+    rpc CreateCustomer (CustomerRequest) returns (CustomerResponse) {}
+}
+
+// Request message for creating a new customer
+message CustomerRequest {
+    int32 id = 1;  // Unique ID number for a Customer.
+    string name = 2;
+    string email = 3;
+    string phone= 4;
+
+    message Address {
+        string street = 1;
+        string city = 2;
+        string state = 3;
+        string zip = 4;
+        bool isShippingAddress = 5;
+    }
+
+    repeated Address addresses = 5;
+}
+
+message CustomerResponse {
+    int32 id = 1;
+    bool success = 2;
+}
+message CustomerFilter {
+    string keyword = 1;
+}

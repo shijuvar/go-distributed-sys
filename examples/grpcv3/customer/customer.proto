@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "github.com/shijuvar/go-distributed-sys/examples/grpc/pb";
+option go_package = "github.com/shijuvar/go-distributed-sys/examples/grpcv2/customer";
 option java_outer_classname = "CustomerProto";
 
 package customer;

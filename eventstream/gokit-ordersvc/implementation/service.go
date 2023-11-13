@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 
 	"github.com/shijuvar/go-distributed-sys/eventstream/eventstore"
@@ -31,7 +32,7 @@ type grpcClient struct {
 
 // createOrder calls the CreateEvent RPC
 func (gc grpcClient) createOrder(order order.Order) error {
-	conn, err := grpc.Dial(grpcUri, grpc.WithInsecure())
+	conn, err := grpc.Dial(grpcUri, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Unable to connect: %v", err)
 	}
