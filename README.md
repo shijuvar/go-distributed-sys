@@ -6,7 +6,7 @@
 
 ## Technologies Used: 
 * Go
-* NATS JetStream
+* NATS, NATS JetStream, NATS Micro
 * gRPC
 * CockroachDB
 * Go kit
