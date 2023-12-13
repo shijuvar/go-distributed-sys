@@ -26,7 +26,7 @@ func main() {
 	defer ec.Close()
 
 	// Send the request for getting a Reply
-	msg, err := nc.Request("discovery", []byte("orderservice"), 10*time.Millisecond)
+	msg, err := nc.Request("discovery", []byte("ordersvc"), 10*time.Millisecond)
 	fmt.Println(string(msg.Data))
 
 	// Publish without encoder
