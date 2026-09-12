@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"runtime"
 
@@ -20,10 +21,15 @@ func main() {
 	}
 
 	// Encoded connection
-	ec, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
+	//ec, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	// Subscribe messages for subject order.created
-	ec.Subscribe("order.created", func(order *Order) {
-		log.Printf("Order ID:%s Customer ID:%s Status:%s", order.OrderID, order.CustomerID, order.Status)
+	nc.Subscribe("order.created", func(m *nats.Msg) {
+		log.Println(m.Data)
+		var order Order
+		err := json.Unmarshal(m.Data, &order)
+		if err == nil {
+			log.Printf("Order ID:%s Customer ID:%s Status:%s", order.OrderID, order.CustomerID, order.Status)
+		}
 	})
 
 	// Subscriber for providing reply to requests

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	//"encoding/json"
 	"log"
@@ -21,25 +22,24 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error: %s", err)
 	}
-	// Encoded connection
-	ec, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
-	defer ec.Close()
+
+	defer nc.Close()
 
 	// Send the request for getting a Reply
 	msg, err := nc.Request("discovery", []byte("ordersvc"), 10*time.Millisecond)
 	fmt.Println(string(msg.Data))
-
-	// Publish without encoder
-	//nc.Publish("order.created", []byte("OrderID: 1234-5678-80"))
-	//log.Println("Message published")
 
 	order := Order{
 		OrderID:    "1234-5678-90",
 		CustomerID: "shijuvar",
 		Status:     "Placed",
 	}
+	jsonOrder, err := json.Marshal(order)
+	if err != nil {
+		log.Fatalf("Error: %s", err)
+	}
 	// Publish using JSON encoder
-	ec.Publish("order.created", order)
+	nc.Publish("order.created", jsonOrder)
 	log.Println("Message published")
 
 	// Close connection
