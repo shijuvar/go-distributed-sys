@@ -56,9 +56,9 @@ func init() {
 
 // general unary interceptor function to handle auth per RPC call as well as logging
 func serverInterceptor(ctx context.Context,
-	req interface{},
+	req any,
 	info *grpc.UnaryServerInfo,
-	handler grpc.UnaryHandler) (interface{}, error) {
+	handler grpc.UnaryHandler) (any, error) {
 	start := time.Now()
 	// FullMethod is the full RPC method string, i.e., /package.service/method.
 	if info.FullMethod == "/customer.Customer/CreateCustomer" {

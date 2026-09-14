@@ -53,7 +53,11 @@ func getCustomers(client pb.CustomerClient, filter *pb.CustomerFilter) {
 
 func main() {
 	// Set up a connection to the gRPC server.
-	conn, err := grpc.Dial(address, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	var opts []grpc.DialOption
+	opts = []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
+	conn, err := grpc.NewClient(address, opts...)
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

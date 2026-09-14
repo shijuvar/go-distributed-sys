@@ -74,8 +74,8 @@ func getContextWithAuth() context.Context {
 func clientInterceptor(
 	ctx context.Context,
 	method string,
-	req interface{},
-	reply interface{},
+	req any,
+	reply any,
 	cc *grpc.ClientConn,
 	invoker grpc.UnaryInvoker,
 	opts ...grpc.CallOption,
@@ -100,7 +100,7 @@ func main() {
 		grpc.WithUnaryInterceptor(clientInterceptor),
 	}
 	// Set up a connection to the gRPC server.
-	conn, err := grpc.Dial(address, opts...)
+	conn, err := grpc.NewClient(address, opts...)
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
