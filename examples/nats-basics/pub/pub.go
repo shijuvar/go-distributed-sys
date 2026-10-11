@@ -38,7 +38,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error: %s", err)
 	}
-	// Publish using JSON encoder
+	// Publish message
 	nc.Publish("order.created", jsonOrder)
 	log.Println("Message published")
 

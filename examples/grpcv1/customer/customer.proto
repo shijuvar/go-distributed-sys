@@ -9,7 +9,7 @@ service Customer {
     // Get all Customers with filter - A server-to-client streaming RPC.
     rpc GetCustomers  (CustomerFilter) returns ( stream CustomerRequest) {}
     // Create a new Customer - A simple RPC
-    rpc CreateCustomer (CustomerRequest) returns (CustomerResponse) {}
+    rpc CreateCustomer (CustomerRequest) returns ( CustomerResponse) {}
 }
 
 // Request message for creating a new customer

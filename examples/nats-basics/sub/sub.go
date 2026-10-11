@@ -21,7 +21,6 @@ func main() {
 	}
 
 	// Encoded connection
-	//ec, _ := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
 	// Subscribe messages for subject order.created
 	nc.Subscribe("order.created", func(m *nats.Msg) {
 		log.Println(m.Data)

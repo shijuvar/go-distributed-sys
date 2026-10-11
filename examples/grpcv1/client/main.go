@@ -58,6 +58,7 @@ func main() {
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
 	conn, err := grpc.NewClient(address, opts...)
+
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

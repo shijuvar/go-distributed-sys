@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"github.com/google/uuid"
-	"github.com/nats-io/nats.go/jetstream"
 	"log/slog"
 	"runtime"
 
+	"github.com/google/uuid"
 	nats "github.com/nats-io/nats.go"
+	"github.com/nats-io/nats.go/jetstream"
 	"github.com/nats-io/nats.go/micro"
 
 	"github.com/shijuvar/go-distributed-sys/jetstream-demo/order"

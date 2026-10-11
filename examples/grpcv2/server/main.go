@@ -86,8 +86,8 @@ func authorize(ctx context.Context) error {
 	if !ok {
 		return status.Errorf(codes.InvalidArgument, "retrieving metadata failed")
 	}
-
 	token, ok := md["authorization"]
+
 	if !ok {
 		return status.Errorf(codes.Unauthenticated, "no auth details supplied")
 	}

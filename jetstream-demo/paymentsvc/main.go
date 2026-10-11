@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"log/slog"
+
 	"github.com/nats-io/nats.go"
 	"github.com/nats-io/nats.go/jetstream"
+
 	ordermodel "github.com/shijuvar/go-distributed-sys/jetstream-demo/order"
-	"log/slog"
 )
 
 const (
