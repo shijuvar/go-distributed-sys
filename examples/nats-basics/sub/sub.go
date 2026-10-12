@@ -23,7 +23,7 @@ func main() {
 	// Encoded connection
 	// Subscribe messages for subject order.created
 	nc.Subscribe("order.created", func(m *nats.Msg) {
-		log.Println(m.Data)
+		//log.Println(m.Data)
 		var order Order
 		err := json.Unmarshal(m.Data, &order)
 		if err == nil {
