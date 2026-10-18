@@ -33,7 +33,7 @@ type grpcClient struct {
 
 // createOrder calls the CreateEvent RPC
 func (gc grpcClient) createOrder(order order.Order) error {
-	conn, err := grpc.Dial(grpcUri, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(grpcUri, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Unable to connect: %v", err)
 	}

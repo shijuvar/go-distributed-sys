@@ -14,7 +14,7 @@ type repository struct {
 
 // New returns a concrete repository backed by CockroachDB
 func New(db *sql.DB) (eventstore.Repository, error) {
-	// return  repository
+	// return repository
 	return &repository{
 		db: db,
 	}, nil

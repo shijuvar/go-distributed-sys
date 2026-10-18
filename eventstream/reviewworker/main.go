@@ -74,7 +74,7 @@ func main() {
 // OrderApproved command is created on Event Store
 func executeOrderApprovedCommand(command ordermodel.ChangeOrderStatusCommand) error {
 
-	conn, err := grpc.Dial(grpcUri, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(grpcUri, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Unable to connect: %v", err)
 	}
