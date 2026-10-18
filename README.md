@@ -27,6 +27,9 @@ protoc eventstore/*.proto \
 
 
 ## Set up CockroachDB 
+Check out CockroachDB documentation to start a local cluster: https://docs.cockroachlabs.com/docs/stable/secure-a-cluster
+
+To create users in CockroachDB, check out here: https://docs.cockroachlabs.com/docs/v25.2/create-user#create-a-user
 
 #### Set up CockroachDB  Cluster with three nodes
 
